@@ -1,0 +1,85 @@
+/*
+  Third party dependencies
+*/
+
+@import '../../node_modules/modularscale-sass/stylesheets/_modularscale.scss';
+@import '../../node_modules/sass-mq/mq.scss';
+@import 'susy';
+@import 'plugins/svg-grid';
+@import 'normalize';
+
+@include normalize();
+
+/*
+  Utilities and functions
+*/
+
+@import '_system/core/units';
+@import '_system/core/colors';
+@import '_system/core/type';
+@import '_system/core/spaces';
+@import '_system/core/mq';
+@import '_system/core/misc';
+
+/*
+  Settings
+*/
+
+@import '_config/base';
+@import '_config/dimensions';
+@import '_config/type-config';
+
+/*
+  JSON Output
+*/
+@import '_tokens/fonts';
+@import '_tokens/colors';
+@import '_tokens/breakpoints';
+
+/*
+  Media query debugger
+*/
+
+@import '_system/debug';
+
+/*
+  Custom, site specific mixins
+*/
+
+@import '_system/site-mixins/mixins';
+
+/*
+  svg-symbols generated via `gulp symbols`
+*/
+
+@import '_system/gulp-output/svg-symbols';
+// @import '_system/gulp-output/svg-sprites';
+
+/*
+  Resets, and globals
+*/
+
+@import 'framework/base';
+
+/*
+  [01] Base Styles
+  [02] Object patterns
+  [03] Global elements patterns
+  [04] Components patterns
+  [05] Grids and macro layouts
+  [06] Pages
+*/
+
+@import '../templates/**/**/**/*';
+
+/*
+  Utility classes
+*/
+
+@import 'framework/utils';
+
+/*
+  Print styles
+*/
+
+@import 'print';

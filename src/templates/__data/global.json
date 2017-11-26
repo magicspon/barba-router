@@ -1,0 +1,56 @@
+{
+  "title" : "Mudstone 7",
+
+	"menu": [
+		{
+			"title": "MudStone",
+			"url": "/a.html"
+		},
+		{
+			"title": "User Guide",
+			"url": "/b.html"
+		},
+		{
+			"title": "Changelog",
+			"url": "/c.html"
+		}
+	],
+
+	"slides": [
+		"/dist/images/demo_img_1.jpg",
+		"/dist/images/demo_img_2.jpg",
+		"/dist/images/demo_img_3.jpg",
+		"/dist/images/demo_img_4.jpg",
+		"/dist/images/demo_img_5.jpg"
+	],
+
+	"accordions": [
+		{
+			"title": "Hello 1",
+			"body": "Elit auctor hic ipsam venenatis? Aspernatur iste sociosqu. Eveniet delectus. Suspendisse, reiciendis fames eum blanditiis pede curabitur quia ante aenean est et esse ornare! Labore."
+		},
+		{
+			"title": "Hello 2",
+			"body": "Elit auctor hic ipsam venenatis? Aspernatur iste sociosqu. Eveniet delectus. Suspendisse, reiciendis fames eum blanditiis pede curabitur quia ante aenean est et esse ornare! Labore."
+		},
+		{
+			"title": "Hello 3",
+			"body": "Elit auctor hic ipsam venenatis? Aspernatur iste sociosqu. Eveniet delectus. Suspendisse, reiciendis fames eum blanditiis pede curabitur quia ante aenean est et esse ornare! Labore."
+		}
+	],
+
+	"contacts": [
+		{
+			"title": "Mud",
+			"tel": "01234567890",
+			"email": "qwertyuio@wert.com"
+		}
+	],
+
+	"posts": [
+		{
+			"title": "A post item",
+			"body": "Lorem bla bla"
+		}
+	]
+}
