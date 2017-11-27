@@ -24,7 +24,7 @@ export default class Router {
 		this.onReadyEvents = onReady
 		this.triggerOnLoad = onReady
 		this.onCompleteEvents = onComplete
-		this.currentRoute = this._match(window.location.pathname)
+		this.currentRoute = this.matchUrl(window.location.pathname)
 		this.linkClicked = false
 		this.navigation = navigation.reduce((acc, selector) => {
 			return [...acc, ...document.querySelectorAll(`${selector} a`)]
@@ -95,7 +95,7 @@ export default class Router {
 
 				done() {
 					const { from, to } = this.params()
-					_this.currentRoute = _this._match(window.location.pathname)
+					_this.currentRoute = _this.matchUrl(window.location.pathname)
 					_this.linkClicked = false
 					this.oldContainer.parentNode.removeChild(this.oldContainer)
 					this.newContainer.style.visibility = 'visible'
@@ -114,7 +114,7 @@ export default class Router {
 		this.prefetch && Prefetch.init()
 	}
 
-	_match = url => {
+	matchUrl = url => {
 		let match = this.routes.filter(
 			({ path }) =>
 				routePattern(path)(url) && numSegments(url) === numSegments(path)
@@ -144,15 +144,24 @@ export default class Router {
 		}
 	}
 
+	matchName = (name, url) => {
+		const match = this.routes.find(route => route.name === name)
+		return {
+			...match,
+			request: url
+		}
+	}
+
 	barbaLinkClicked = el => {
 		const url = el.pathname
+		const { route } = el.dataset
 		this.linkClicked = true
-		this.match = this._match(url)
+		this.match = route ? this.matchName(route, url) : this.matchUrl(url)
 	}
 
 	barbaStateChange = currentStatus => {
 		if (!this.linkClicked) {
-			this.match = this._match(window.location.pathname)
+			this.match = this.matchUrl(window.location.pathname)
 		}
 
 		if (this.triggerOnLoad) {
