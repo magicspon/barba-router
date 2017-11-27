@@ -8,6 +8,7 @@ if (module.hot) {
 
 new Router({
 	routes,
+	triggerOnLoad: true,
 	onChange: [],
 	onReady: [],
 	onComplete: [],

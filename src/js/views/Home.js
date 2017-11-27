@@ -1,7 +1,7 @@
 export const Home = {
 	onEnter({ from, to, next }) {
-		document.body.style.backgroundColor = '#5ea'
-		// log('onEnter:homePage')
+		document.body.style.backgroundColor = '#4ae'
+		log('onEnter:homePage')
 		next()
 	},
 

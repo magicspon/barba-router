@@ -9,7 +9,8 @@ import { Fallback } from './Fallback'
 export default [
 	{
 		path: '/',
-		view: Home
+		view: Home,
+		name: 'home'
 	},
 	{
 		path: '/page-1',

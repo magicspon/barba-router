@@ -16,11 +16,13 @@ export default class Router {
 		prefetch = true,
 		onChange = [],
 		onReady = [],
+		triggerOnLoad = false,
 		onComplete = []
 	}) {
 		this.routes = flattenRoutes(routes)
 		this.onChangeEvents = onChange
 		this.onReadyEvents = onReady
+		this.triggerOnLoad = onReady
 		this.onCompleteEvents = onComplete
 		this.currentRoute = this._match(window.location.pathname)
 		this.linkClicked = false
@@ -151,6 +153,25 @@ export default class Router {
 	barbaStateChange = currentStatus => {
 		if (!this.linkClicked) {
 			this.match = this._match(window.location.pathname)
+		}
+
+		if (this.triggerOnLoad) {
+			this.triggerOnLoad = false
+			const { match, currentRoute } = this
+			new Promise(resolve => {
+				this.match.view
+					.onEnter({
+						from: currentRoute,
+						to: match,
+						next: resolve
+					})
+					.then(() => {
+						tryFn(this.match.view.onAfterEnter)({
+							from: currentRoute,
+							to: match
+						})
+					})
+			})
 		}
 
 		this.onChangeEvents.forEach(fn => {
