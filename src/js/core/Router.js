@@ -4,7 +4,8 @@ import {
 	tryFn,
 	explodeSegments,
 	numSegments,
-	parseQuery
+	parseQuery,
+	searchToObject
 } from './utils'
 import { Pjax, Dispatcher, BaseTransition, Prefetch } from 'barba.js'
 
@@ -25,7 +26,10 @@ export default class Router {
 		this.onReadyEvents = onReady
 		this.triggerOnLoad = triggerOnLoad
 		this.onCompleteEvents = onComplete
-		this.currentRoute = this.matchUrl(window.location.pathname)
+		this.currentRoute = this.matchUrl({
+			pathname: window.location.pathname,
+			search: window.location.search
+		})
 		this.linkClicked = false
 		this.navigation = navigation.reduce((acc, selector) => {
 			return [...acc, ...document.querySelectorAll(`${selector} a`)]
@@ -51,33 +55,13 @@ export default class Router {
 				},
 
 				params() {
-					const {
-						path: fromPath,
-						name: fromName,
-						request: fromRequest,
-						params: fromParams
-					} = _this.currentRoute
-
-					const {
-						path: toPath,
-						name: toName,
-						request: toRequest,
-						params: toParams
-					} = _this.match
-
 					return {
 						from: {
-							path: fromPath,
-							name: fromName,
-							request: fromRequest,
-							params: fromParams,
+							..._this.currentRoute,
 							container: this.oldContainer
 						},
 						to: {
-							path: toPath,
-							name: toName,
-							request: toRequest,
-							params: toParams,
+							..._this.match,
 							container: this.newContainer
 						}
 					}
@@ -115,7 +99,10 @@ export default class Router {
 
 				done() {
 					const { from, to } = this.params()
-					_this.currentRoute = _this.matchUrl(window.location.pathname)
+					_this.currentRoute = _this.matchUrl({
+						pathname: window.location.pathname,
+						search: window.location.search
+					})
 					_this.linkClicked = false
 					this.oldContainer.parentNode.removeChild(this.oldContainer)
 					this.newContainer.style.visibility = 'visible'
@@ -134,10 +121,10 @@ export default class Router {
 		this.prefetch && Prefetch.init()
 	}
 
-	matchUrl = url => {
+	matchUrl = ({pathname, search}) => {
 		let match = this.routes.filter(
 			({ path }) =>
-				routePattern(path)(url) && numSegments(url) === numSegments(path)
+				routePattern(path)(pathname) && numSegments(pathname) === numSegments(path)
 		)
 
 		if (match.length) {
@@ -150,36 +137,47 @@ export default class Router {
 
 		const { path } = match
 
-		if (url !== '/' && path === '/') {
+		if (pathname !== '/' && path === '/') {
 			match = this.routes.find(({ path }) => path === '*')
 		}
 
-		const params = routePattern(match.path)(url)
+		const params = routePattern(match.path)(pathname)
+		const getParams = search && searchToObject(search) || {}
 		return {
 			...match,
-			request: url,
-			params
+			pathname,
+			params,
+			getParams,
 		}
 	}
 
-	matchName = (name, url) => {
+	matchName = ({name, pathname, search}) => {
 		const match = this.routes.find(route => route.name === name)
+		const getParams = search && searchToObject(search) || {}
 		return {
 			...match,
-			request: url
+			getParams,
+			request: pathname
 		}
 	}
 
 	barbaLinkClicked = el => {
-		const url = el.pathname
+		const pathname = el.pathname
+		const search = el.search
 		const { route } = el.dataset
 		this.linkClicked = true
-		this.match = route ? this.matchName(route, url) : this.matchUrl(url)
+		this.match = route ? this.matchName({route, pathname, search}) : this.matchUrl({
+			pathname: el.pathname,
+			search: el.search
+		})
 	}
 
 	barbaStateChange = currentStatus => {
 		if (!this.linkClicked) {
-			this.match = this.matchUrl(window.location.pathname)
+			this.match = this.matchUrl({
+				pathname: window.location.pathname,
+				search: window.location.search
+			})
 		}
 
 		if (this.triggerOnLoad) {
