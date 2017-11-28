@@ -51,33 +51,13 @@ export default class Router {
 				},
 
 				params() {
-					const {
-						path: fromPath,
-						name: fromName,
-						request: fromRequest,
-						params: fromParams
-					} = _this.currentRoute
-
-					const {
-						path: toPath,
-						name: toName,
-						request: toRequest,
-						params: toParams
-					} = _this.match
-
 					return {
 						from: {
-							path: fromPath,
-							name: fromName,
-							request: fromRequest,
-							params: fromParams,
+							..._this.currentRoute,
 							container: this.oldContainer
 						},
 						to: {
-							path: toPath,
-							name: toName,
-							request: toRequest,
-							params: toParams,
+							..._this.match,
 							container: this.newContainer
 						}
 					}
