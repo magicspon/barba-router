@@ -77,19 +77,30 @@ export const routePattern = pathx({
 	end: false
 })
 
-// let match = routePattern('/post/:id')
+export const parseQuery = input => {
+	const queryString = input.split('?')[1]
+	const query = {}
+	const pairs = queryString.split('&')
+	for (let i = 0; i < pairs.length; i += 1) {
+		let pair = pairs[i].split('=')
+		query[decodeParam(pair[0])] = decodeParam(pair[1] || '')
+	}
+	return query
+}
 
 export const flattenRoutes = routes =>
 	routes.reduce((acc, { path, view, children, name }) => {
-		const base = path
+		let base = path
 		const tmp = []
 
 		tmp.push({ path: path, view: view, name })
 
 		if (children) {
+			if (base[base.length - 1] !== '/') {
+				base += '/'
+			}
 			if (children.toString() === '[object Object]') {
-				const path = `${base}/${children.path}`
-				// log(children.children)
+				const path = `${base}${children.path}`
 				tmp.push({
 					...children,
 					path
@@ -99,7 +110,7 @@ export const flattenRoutes = routes =>
 					...flattenRoutes(children).map(item => {
 						return {
 							...item,
-							path: base + item.path
+							path: (base + item.path).replace('//', '/')
 						}
 					})
 				)

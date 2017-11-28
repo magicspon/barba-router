@@ -3,7 +3,8 @@ import {
 	routePattern,
 	tryFn,
 	explodeSegments,
-	numSegments
+	numSegments,
+	parseQuery
 } from './utils'
 import { Pjax, Dispatcher, BaseTransition, Prefetch } from 'barba.js'
 
@@ -22,7 +23,7 @@ export default class Router {
 		this.routes = flattenRoutes(routes)
 		this.onChangeEvents = onChange
 		this.onReadyEvents = onReady
-		this.triggerOnLoad = onReady
+		this.triggerOnLoad = triggerOnLoad
 		this.onCompleteEvents = onComplete
 		this.currentRoute = this.matchUrl(window.location.pathname)
 		this.linkClicked = false
@@ -50,15 +51,33 @@ export default class Router {
 				},
 
 				params() {
+					const {
+						path: fromPath,
+						name: fromName,
+						request: fromRequest,
+						params: fromParams
+					} = _this.currentRoute
+
+					const {
+						path: toPath,
+						name: toName,
+						request: toRequest,
+						params: toParams
+					} = _this.match
+
 					return {
 						from: {
-							path: _this.currentRoute.path,
-							params: _this.currentRoute.matches,
+							path: fromPath,
+							name: fromName,
+							request: fromRequest,
+							params: fromParams,
 							container: this.oldContainer
 						},
 						to: {
-							path: _this.match.path,
-							params: _this.match.params,
+							path: toPath,
+							name: toName,
+							request: toRequest,
+							params: toParams,
 							container: this.newContainer
 						}
 					}
@@ -84,6 +103,7 @@ export default class Router {
 
 				pageEnter() {
 					const { from, to } = this.params()
+
 					_this.match.view.onEnter({
 						from,
 						to,
@@ -119,8 +139,6 @@ export default class Router {
 			({ path }) =>
 				routePattern(path)(url) && numSegments(url) === numSegments(path)
 		)
-
-		log(match)
 
 		if (match.length) {
 			match = match.reduce(

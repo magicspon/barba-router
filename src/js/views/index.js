@@ -14,14 +14,13 @@ export default [
 	},
 	{
 		path: '/page-1',
-		view: Page1
+		view: Page1,
+		query: {
+			name: 'test'
+		}
 	},
-	// {
-	// 	path: '/page-2',
-	// 	view: Page2
-	// },
 	{
-		path: '/blog',
+		path: '/blog/',
 		view: Blog,
 		children: {
 			path: ':id',
@@ -52,6 +51,7 @@ export default [
 	},
 	{
 		path: '*',
-		view: Fallback
+		view: Fallback,
+		name: 'fallback'
 	}
 ]
