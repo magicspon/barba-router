@@ -1,5 +1,7 @@
 import { flattenRoutes, findRoute, navLinks } from './utils/router.utils'
-import { Pjax, Dispatcher, BaseTransition, Prefetch } from 'barba.js'
+import Barba, { Pjax, Dispatcher, BaseTransition, Prefetch } from 'barba.js'
+
+export { Barba, Pjax }
 
 export default class Router {
 	constructor({
