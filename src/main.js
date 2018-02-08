@@ -1,7 +1,9 @@
 import { flattenRoutes, findRoute, navLinks } from './utils/router.utils'
-import Barba, { Pjax, Dispatcher, BaseTransition, Prefetch } from 'barba.js'
+import Barba from 'barba.js'
 
 export { Barba, Pjax }
+
+const { Pjax, Dispatcher, BaseTransition, Prefetch } = Barba
 
 export default class Router {
 	constructor({
@@ -54,9 +56,9 @@ export default class Router {
 
 		const from = this.history.previous
 			? {
-				...this.history.previous.data,
-				name: this.history.previous.route.name
-			}
+					...this.history.previous.data,
+					name: this.history.previous.route.name
+				}
 			: null
 
 		return { from, to: { ...data, name: route.name } }

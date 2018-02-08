@@ -75,7 +75,7 @@ function decodeParam(param) {
 	try {
 		return decodeURIComponent(param)
 	} catch (_) {
-		log('decodeParam error')
+		console.error('decodeParam error')
 	}
 }
 
@@ -113,23 +113,16 @@ export const flattenRoutes = routes =>
 		tmp.push({ path: path, view: view, name })
 
 		if (children) {
-			if (Array.isArray(children)) {
-				tmp.push(
-					...flattenRoutes(children).map(item => {
-						return {
-							...item,
-							path: base + item.path
-						}
-					})
-				)
-			} else {
-				const slash = base === '/' ? '' : '/'
-				const path = `${base}${slash}${children.path}`
-				tmp.push({
-					...children,
-					path
+			const items = Array.isArray(children) ? children : [children]
+			const slash = base === '/' ? '' : '/'
+			tmp.push(
+				...flattenRoutes(items).map(item => {
+					return {
+						...item,
+						path: base + slash + item.path
+					}
 				})
-			}
+			)
 		}
 
 		acc.push(...tmp)
