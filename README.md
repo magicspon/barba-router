@@ -37,10 +37,21 @@ const routes = [
 		path: '/test',
 		name: '#c0bfd7',
 		view: example,
-		children: {
-			path: ':id',
-			view: example
-		}
+		children: [
+			{
+				path: '/page-1',
+				view: example,
+				children: {
+					path: ':id',
+					name: '#aac8dc',
+					view: example
+				}
+			},
+			{
+				path: '/page-2',
+				view: example
+			}
+		]
 	},
 	{
 		path: '*',
