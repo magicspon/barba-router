@@ -5,6 +5,27 @@ export { Barba, Pjax }
 
 const { Pjax, Dispatcher, BaseTransition, Prefetch } = Barba
 
+export const Route = superclass =>
+	class extends superclass {
+		history() {
+			Dispatcher.on('initStateChange', this.onChange)
+			Dispatcher.on('newPageReady', this.onReady)
+			Dispatcher.on('transitionCompleted', this.onComplete)
+
+			this.startingRoute = parseUrl(window.location.href)
+		}
+
+		clearHistory() {
+			Dispatcher.off('initStateChange', this.onChange)
+			Dispatcher.off('newPageReady', this.onReady)
+			Dispatcher.off('transitionCompleted', this.onComplete)
+		}
+
+		onChange = () => {}
+		onReady = () => {}
+		onComplete = () => {}
+	}
+
 export default class Router {
 	constructor({
 		routes,
@@ -24,6 +45,7 @@ export default class Router {
 		this.onChange = onChange
 		this.onReady = onReady
 		this.onComplete = onComplete
+		this.$wrapper = document.getElementById('barba-wrapper')
 	}
 
 	syncEvents = () => {
@@ -56,9 +78,9 @@ export default class Router {
 
 		const from = this.history.previous
 			? {
-					...this.history.previous.data,
-					name: this.history.previous.route.name
-				}
+				...this.history.previous.data,
+				name: this.history.previous.route.name
+			}
 			: null
 
 		return { from, to: { ...data, name: route.name } }
@@ -73,7 +95,15 @@ export default class Router {
 		if (this.playOnLoad) {
 			this.playOnLoad = false
 			const { route: { view } } = this.history.current
-			view.onEnter({ from, to, next: () => {} })
+			view.onEnter({
+				from: null,
+				to: {
+					...to,
+					container: Pjax.Dom.getContainer()
+				},
+				wrapper: this.$wrapper,
+				next: () => {}
+			})
 		}
 
 		this.onChange.forEach(fn => fn({ from, to }))
@@ -129,14 +159,24 @@ export default class Router {
 					return new Promise(resolve => {
 						const { route: { view } } = _this.history.previous
 						const { from, to } = _this.getData()
-						view.onLeave({ from, to, next: resolve })
+						view.onLeave({
+							from: { ...from, container: this.oldContainer },
+							to: { ...to, container: this.newContainer },
+							wrapper: _this.$wrapper,
+							next: resolve
+						})
 					})
 				},
 
 				pageEnter() {
 					const { route: { view } } = _this.history.current
 					const { from, to } = _this.getData()
-					view.onEnter({ from, to, next: this.done.bind(this) })
+					view.onEnter({
+						from: { ...from, container: this.oldContainer },
+						to: { ...to, container: this.newContainer },
+						wrapper: _this.$wrapper,
+						next: this.done.bind(this)
+					})
 				},
 
 				done(cb) {
