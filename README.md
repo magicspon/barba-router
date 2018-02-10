@@ -2,19 +2,23 @@ http://sharp-booth-fc3141.netlify.com/
 
 ```
 const example = {
-	onEnter({ from, to, next }) {
+	onEnter({ from, to, wrapper, next }) {
 		console.info('onEnter')
 		console.table({ from, to })
-		body.style.background = to.name
+		from.container.style.background = to.name
 
 		next()
 	},
+	
+	onEnterComplete({from, to, wrapper}) {},
 
-	onLeave({ from, to, next }) {
+	onLeave({ from, to, wrapper, next }) {
 		console.info('onLeave')
 		console.table({ from, to })
 		next()
-	}
+	},
+	
+	onLeaveComplete({from, to, wrapper}) {},
 }
 
 const routes = [
