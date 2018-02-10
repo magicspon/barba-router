@@ -72,14 +72,26 @@ export default class Router {
 		if (this.playOnLoad) {
 			this.playOnLoad = false
 			const { route: { view } } = this.history.current
-			view.onEnter({
-				from: null,
-				to: {
-					...to,
-					container: Pjax.Dom.getContainer()
-				},
-				wrapper: this.$wrapper,
-				next: () => {}
+			const container = Pjax.Dom.getContainer()
+
+			new Promise(resolve => {
+				view.onEnter({
+					from: null,
+					to: {
+						...to,
+						container
+					},
+					wrapper: this.$wrapper,
+					next: resolve
+				})
+			}).then(() => {
+				if (view.onEnterComplete) {
+					view.onEnterComplete({
+						from: null,
+						to: { ...to, container },
+						wrapper: this.$wrapper
+					})
+				}
 			})
 		}
 
