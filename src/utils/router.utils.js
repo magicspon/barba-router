@@ -179,9 +179,13 @@ export const navLinks = (
 			.filter(({ $anchor, path, segments }) => {
 				$anchor.classList.remove(currentClass, currentParentClass)
 
-				const s = inputSegments.slice(0, length - 1)
-				const a = segments.find((segment, index) => segment === s[index])
-				return path === inputPath || a
+				return (
+					path === inputPath ||
+					segments.find(
+						(segment, index) =>
+							segment === inputSegments.slice(0, length - 1)[index]
+					)
+				)
 			})
 			.map(({ $anchor }) => {
 				const className =

@@ -18,9 +18,10 @@
 		"build": "rollup -c",
 		"dev": "NODE_ENV=development rollup -c -w"
 	},
-	"files": ["dist"],
-	"description":
-		"not really a router, uses a 'router' type object to match urls to pages transitions",
+	"files": [
+		"dist"
+	],
+	"description": "not really a router, uses a 'router' type object to match urls to pages transitions",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/magicspon/barba-router.git"

@@ -3,6 +3,8 @@ import Barba from 'barba.js'
 
 const { Pjax, Dispatcher, BaseTransition, Prefetch } = Barba
 
+export { Barba }
+
 export default class Router {
 	constructor({
 		routes,
@@ -22,7 +24,7 @@ export default class Router {
 		this.onChange = onChange
 		this.onReady = onReady
 		this.onComplete = onComplete
-		this.$wrapper = document.getElementById('barba-wrapper')
+		this.$wrapper = Pjax.Dom.getWrapper()
 	}
 
 	syncEvents = () => {
@@ -55,9 +57,9 @@ export default class Router {
 
 		const from = this.history.previous
 			? {
-				...this.history.previous.data,
-				name: this.history.previous.route.name
-			}
+					...this.history.previous.data,
+					name: this.history.previous.route.name
+				}
 			: null
 
 		return { from, to: { ...data, name: route.name } }
