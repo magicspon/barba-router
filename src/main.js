@@ -79,10 +79,8 @@ export default class Router {
 			new Promise(resolve => {
 				view.onEnter({
 					from: null,
-					to: {
-						...to,
-						container
-					},
+					to,
+					container,
 					wrapper: this.$wrapper,
 					next: resolve
 				})
@@ -90,7 +88,8 @@ export default class Router {
 				if (view.onEnterComplete) {
 					view.onEnterComplete({
 						from: null,
-						to: { ...to, container },
+						to,
+						container,
 						wrapper: this.$wrapper
 					})
 				}
@@ -153,8 +152,9 @@ export default class Router {
 						const { from, to } = _this.getData()
 
 						view.onLeave({
-							from: { ...from, container: this.oldContainer },
-							to: { ...to, container: this.newContainer },
+							from,
+							to,
+							container: this.oldContainer,
 							wrapper: _this.$wrapper,
 							next: resolve
 						})
@@ -169,8 +169,9 @@ export default class Router {
 					if (view.onLeaveComplete) {
 						const { from, to } = _this.getData()
 						view.onLeaveComplete({
-							from: { ...from, container: this.oldContainer },
-							to: { ...to, container: this.newContainer },
+							from,
+							to,
+							container: this.newContainer,
 							wrapper: _this.$wrapper
 						})
 					}
@@ -182,8 +183,9 @@ export default class Router {
 						const { route: { view } } = _this.history.current
 						const { from, to } = _this.getData()
 						view.onEnter({
-							from: { ...from, container: this.oldContainer },
-							to: { ...to, container: this.newContainer },
+							from,
+							to,
+							container: this.newContainer,
 							wrapper: _this.$wrapper,
 							next: resolve
 						})
@@ -198,11 +200,11 @@ export default class Router {
 					if (view.onEnterComplete) {
 						const { from, to } = _this.getData()
 						view.onEnterComplete({
-							from: { ...from, container: this.oldContainer },
-							to: { ...to, container: this.newContainer },
+							from,
+							to,
+							container: this.newContainer,
 							wrapper: _this.$wrapper
 						})
-					}
 				}
 			})
 		}
