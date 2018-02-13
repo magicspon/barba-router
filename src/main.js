@@ -162,7 +162,7 @@ export default class Router {
 				},
 
 				pageExitComplete() {
-					const { route: { view } } = _this.history.previous
+					const { route: { view } } = _this.history.current
 
 					this.oldContainer.parentNode.removeChild(this.oldContainer)
 
